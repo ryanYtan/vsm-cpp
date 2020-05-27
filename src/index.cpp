@@ -1,5 +1,5 @@
 #include "util/stringutil.h"
-#include "vsm/builder/index_builder.h"
+#include "vsm/builder/indexbuilder.h"
 #include <glob.h>
 #include <algorithm>
 #include <iostream>
@@ -149,9 +149,10 @@ int main(int argc, char *argv[])
         for (const auto& s : tokenize(text)) {
             builder.insert(docid, s, position++);
         }
-        printf("On %zu of %zu\n", i + 1, files.size());
+        printf("\rOn %zu of %zu", i + 1, files.size());
     }
+    printf("\n");
 
-    builder.finalize(args.FILENAME_DICTIONARY, args.FILENAME_POSTINGS,
-                     args.FILENAME_DOCUMENTS);
+    builder.build(args.FILENAME_DICTIONARY, args.FILENAME_POSTINGS,
+                  args.FILENAME_DOCUMENTS);
 }
