@@ -1,2 +1,7 @@
 .vscode
 reuters_data/*
+dictionary.txt
+documents.txt
+postings.txt
+main_test
+index
