@@ -26,23 +26,17 @@ namespace vsm
         using PTuplePtr = std::shared_ptr<PostingListTuple>;
         using PMap = std::map<DocId, PTuplePtr>;
 
-        static const std::string SERIALIZE_DELIM_L1;
-        static const std::string SERIALIZE_DELIM_L2;
-        static const std::string SERIALIZE_DELIM_L3;
-
         PostingList();
         PostingList(PMap plist);
 
         DocFreq docfreq() const;
         TermFreq termfreq(DocId docid) const;
         PositionList positions(DocId docid) const;
-
         std::vector<PostingListItem> items() const;
-
         void insert(DocId docid, Position position);
 
-        std::string serialize() const;
-        static PostingList parse(const std::string& serialized);
+        friend bool operator==(const PostingList& lhs, const PostingList& rhs);
+        friend bool operator!=(const PostingList& lhs, const PostingList& rhs);
 
     private:
         PMap _plist;

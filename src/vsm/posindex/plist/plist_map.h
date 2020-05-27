@@ -10,6 +10,7 @@ namespace vsm
     {
     public:
         PostingListMapper(std::istream& plmap);
+        PostingListMapper(std::shared_ptr<std::istream> plmap_ptr);
         PostingList at(Offset offset);
     private:
         std::istream& _plmap;

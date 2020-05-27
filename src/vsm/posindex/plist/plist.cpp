@@ -7,19 +7,13 @@ using VectorStr = std::vector<std::string>;
 
 namespace vsm
 {
-    const std::string PostingList::SERIALIZE_DELIM_L1 = "|";
-    const std::string PostingList::SERIALIZE_DELIM_L2 = ",";
-    const std::string PostingList::SERIALIZE_DELIM_L3 = " ";
-
     PostingList::PostingList()
         : _plist(PMap())
-    {
-    }
+    {}
 
     PostingList::PostingList(PMap plist)
         : _plist(plist)
-    {
-    }
+    {}
 
     DocFreq PostingList::docfreq() const
     {
@@ -63,42 +57,30 @@ namespace vsm
         }
     }
 
-    std::string PostingList::serialize() const
+    bool operator==(const PostingList& lhs, const PostingList& rhs)
     {
-        VectorStr plists;
-        for (const auto &[docid, tuple] : _plist)
-        {
-            auto termfreq_str = std::to_string(tuple.get()->termfreq);
-            auto positions_str = util::join(tuple.get()->positions,
-                    PostingList::SERIALIZE_DELIM_L3);
-            plists.push_back(docid
-                    + PostingList::SERIALIZE_DELIM_L2 + termfreq_str
-                    + PostingList::SERIALIZE_DELIM_L2 + positions_str);
+        if (lhs._plist.size() != rhs._plist.size()) {
+            return false;
         }
-        return util::join(plists, PostingList::SERIALIZE_DELIM_L1);
+
+        for (const auto& [docid, tupleptr] : lhs._plist) {
+
+            if (rhs._plist.find(docid) == rhs._plist.end()) {
+                return false;
+            }
+
+            auto rhs_tupleptr = rhs._plist.at(docid);
+
+            if ((*tupleptr).positions != (*rhs_tupleptr).positions
+                    || (*tupleptr).termfreq != (*rhs_tupleptr).termfreq) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    PostingList PostingList::parse(const std::string& serialized)
+    bool operator!=(const PostingList& lhs, const PostingList& rhs)
     {
-        PMap pmap;
-        auto plists = util::split(serialized, PostingList::SERIALIZE_DELIM_L1);
-
-        for (const auto& plist : plists) {
-            auto components = util::split(plist, PostingList::SERIALIZE_DELIM_L2);
-
-            auto docid = components[0];
-            auto termfreq = static_cast<TermFreq>(std::stoi(components[1]));
-            auto positions = util::split(components[2],
-                    PostingList::SERIALIZE_DELIM_L3);
-            auto poslist = util::map(positions, [](std::string s) {
-                return static_cast<Position>(std::stoi(s));
-            });
-
-            pmap[docid] = std::make_shared<PostingListTuple>(PostingListTuple{
-                termfreq, poslist
-            });
-        }
-
-        return PostingList(pmap);
+        return !(lhs == rhs);
     }
 }

@@ -9,17 +9,14 @@ namespace vsm
     {
     public:
         using Dict = std::map<Term, Offset>;
+        using VectorPairs = std::vector<std::pair<Term, Offset>>;
 
-        static const std::string SERIALIZE_DELIM_L1;
-
-        Dictionary();
         Dictionary(Dict dict);
 
         Count vocabulary_size() const noexcept;
-        Offset get(Term term) const;
+        Offset offset_of(Term term) const;
         bool has(std::initializer_list<Term> terms) const noexcept;
-
-        static Dictionary from_stream(std::istream& lines);
+        VectorPairs items() const;
 
     private:
         Dict _dict;
