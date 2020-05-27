@@ -1,27 +1,31 @@
 #include "vsm/vsmodel.h"
 #include "vsm/vmap/vmap.h"
 #include "util/stringutil.h"
+#include "vsm/serializer/serializer_dict.h"
+#include "vsm/serializer/serializer_docmap.h"
 #include <cmath>
 
 namespace vsm
 {
-    VectorSpaceModel::VectorSpaceModel(Dictionary dict, PostingListMapper plmap, DocumentMap dmap)
+    VectorSpaceModel::VectorSpaceModel(Dictionary dict,
+                                       PostingListMapper plmap,
+                                       DocumentMap dmap)
         : _dict(dict), _plistmap(plmap), _dmap(dmap)
     {}
 
     VectorSpaceModel VectorSpaceModel::of(std::istream& dict_stream,
-                         std::istream& postings_stream,
-                         std::istream& doc_stream)
+                                          std::istream& postings_stream,
+                                          std::istream& doc_stream)
     {
-        auto dict = Dictionary::from_stream(dict_stream);
-        auto pmap = PostingListMapper(postings_stream);
-        auto dmap = DocumentMap::from_stream(doc_stream);
-        return VectorSpaceModel(dict, pmap, dmap);
-    }
+        DictionarySerializer ds;
+        auto dict = ds.deserialize(dict_stream);
 
-    unsigned int VectorSpaceModel::corpus_size() const noexcept
-    {
-        return _dmap.corpus_size();
+        auto pmap = PostingListMapper(postings_stream);
+
+        DocumentMapSerializer dms;
+        auto dmap = dms.deserialize(doc_stream);
+
+        return VectorSpaceModel(dict, pmap, dmap);
     }
 
     double VectorSpaceModel::logfw(int tf, int base)
@@ -66,11 +70,12 @@ namespace vsm
                 continue;
             }
 
-            auto offset = _dict.get(term);
+            auto offset = _dict.offset_of(term);
             auto term_plist = _plistmap.at(offset);
 
             auto tf_tq = VectorSpaceModel::logfw(count);
-            auto tf_idf = VectorSpaceModel::loginvf(term_plist.docfreq(), corpus_size());
+            auto tf_idf = VectorSpaceModel::loginvf(term_plist.docfreq(),
+                                                    _dmap.corpus_size());
 
             auto wtq = tf_tq * tf_idf;
 
