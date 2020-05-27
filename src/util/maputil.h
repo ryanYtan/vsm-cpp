@@ -6,8 +6,12 @@
 
 namespace util
 {
-    template<typename K, typename V> using Map = std::map<K,V>;
-    template<typename T> using Set = std::set<T>;
+    template<typename K, typename V>
+    using Map = std::map<K,V>;
+    template<typename T>
+    using Set = std::set<T>;
+    template<typename T1, typename T2>
+    using Pair = std::pair<T1,T2>;
 
     template<typename K, typename V>
     Set<K> keys(const Map<K,V>& map)
@@ -27,6 +31,16 @@ namespace util
             values.insert(val);
         }
         return values;
+    }
+
+    template<typename K, typename V>
+    Vector<Pair<K,V>> items(const Map<K,V>& map)
+    {
+        Vector<Pair<K,V>> items;
+        for (const auto& [key, val] : map) {
+            items.push_back(std::make_pair(key, val));
+        }
+        return items;
     }
 
     template<typename K, typename V>
