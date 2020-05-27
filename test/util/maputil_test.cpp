@@ -51,6 +51,25 @@ TEST_CASE("values")
     }
 }
 
+TEST_CASE("items")
+{
+    SECTION("Non-empty map") {
+        Vector<Pair<std::string, int>> expected({
+            {"a", 1},
+            {"b", 2},
+            {"c", 3}
+        });
+        auto actual = items(test_map);
+        REQUIRE(expected == actual);
+    }
+
+    SECTION("Empty map") {
+        Vector<Pair<std::string, int>> expected;
+        auto actual = items(test_map_empty);
+        REQUIRE(expected == actual);
+    }
+}
+
 TEST_CASE("common_keys")
 {
     SECTION("Have common keys") {

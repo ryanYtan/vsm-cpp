@@ -30,24 +30,9 @@ TEST_CASE("Dictionary")
     }
 
     SECTION("get") {
-        REQUIRE(test_dict.get("a") == 100);
-        REQUIRE(test_dict.get("d") == 400);
-        REQUIRE_THROWS(test_dict.get("e"));
-        REQUIRE_THROWS(test_dict_empty.get("a"));
-    }
-
-    SECTION("from_stream") {
-        std::stringstream ss;
-        ss << "a|100\n"
-           << "b|200\n"
-           << "c|300\n"
-           << "d|400\n";
-        auto actual = Dictionary::from_stream(ss);
-
-        REQUIRE(actual.get("a") == test_dict.get("a"));
-        REQUIRE(actual.get("b") == test_dict.get("b"));
-        REQUIRE(actual.get("c") == test_dict.get("c"));
-        REQUIRE(actual.get("d") == test_dict.get("d"));
-        REQUIRE_THROWS(actual.get("e"));
+        REQUIRE(test_dict.offset_of("a") == 100);
+        REQUIRE(test_dict.offset_of("d") == 400);
+        REQUIRE_THROWS(test_dict.offset_of("e"));
+        REQUIRE_THROWS(test_dict_empty.offset_of("a"));
     }
 }
