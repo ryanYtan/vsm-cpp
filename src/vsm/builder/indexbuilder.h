@@ -1,5 +1,5 @@
-#ifndef VSM_BUILDER_INDEX_BUILDER_H_INCLUDED
-#define VSM_BUILDER_INDEX_BUILDER_H_INCLUDED
+#ifndef VSM_BUILDER_INDEXBUILDER_H_INCLUDED
+#define VSM_BUILDER_INDEXBUILDER_H_INCLUDED
 #include "vsm/vsm_common.h"
 #include "vsm/posindex/plist/plist.h"
 #include "vsm/docmap/docmap.h"
@@ -16,9 +16,9 @@ namespace vsm
 
         void insert(DocId docid, Term term, Position position);
 
-        void finalize(const std::string& ofile_dict,
-                      const std::string& ofile_postings,
-                      const std::string& ofile_documents);
+        void build(const std::string& ofile_dict,
+                   const std::string& ofile_postings,
+                   const std::string& ofile_documents);
 
     private:
         TermPList _builder_dict;
