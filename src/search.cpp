@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     std::string query;
     while (std::getline(queries, query)) {
         std::vector<std::string> docids = model.cosine_similarity(query);
-        std::cout << vectostr(docids) << "\n";
+        std::cout << "[" << query << "] " << vectostr(docids) << "\n";
     }
 
     queries.close();
