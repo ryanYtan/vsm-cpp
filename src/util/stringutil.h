@@ -1,80 +1,74 @@
 #ifndef UTIL_STRINGUTIL_H_INCLUDED
 #define UTIL_STRINGUTIL_H_INCLUDED
-#include "util/util_common.h"
 #include <sstream>
 
 namespace util
 {
-    /**
-     * @brief
-     *
-     * @tparam T
-     * @param container
-     * @param delim
-     * @return String
-     */
-    template<typename T>
-    String join(const Vector<T>& container, const String& delim = "")
+    template<typename T,
+             template<typename, typename...> typename Container,
+             typename... Args>
+    std::string
+    join(const Container<T>& strings, const std::string& delim = " ")
     {
-        if (container.empty()) {
+        if (strings.empty()) {
             return "";
         }
-
-        auto it = container.begin();
-
         std::stringstream ss;
-        ss << *it;
-
-        (void)++it;
-        while (it != container.end()) {
-            ss << delim << *it;
-            (void)++it;
+        size_t i = 1;
+        for (const auto& s : strings) {
+            if (i == strings.size()) {
+                ss << s;
+            } else {
+                ss << s << delim;
+            }
+            i++;
         }
-
         return ss.str();
     }
 
-    /**
-     * @brief
-     *
-     * @param s
-     * @param delim
-     * @return Vector<String>
-     */
-    Vector<String> split(const String& s, const String& delim = " ");
+    // Adapted with minor modifications: https://stackoverflow.com/a/57346888/10966389
+    template<typename OutputIt>
+    OutputIt
+    split(OutputIt result, const std::string& s, const std::string& delim = " ")
+    {
+        if (s.empty()) {
+            return result;
+        }
 
-    /**
-     * @brief
-     *
-     * @param s
-     * @return String
-     */
-    String trim(const String& s);
+        size_t found = s.find(delim);
+        size_t start_index = 0;
 
-    /**
-     * @brief
-     *
-     * @param s
-     * @return String
-     */
-    String casefold(const String& s);
+        while (found != std::string::npos) {
+            std::string temp(s.begin() + start_index, s.begin() + found);
 
-    /**
-     * @brief
-     *
-     * @param s
-     * @return true
-     * @return false
-     */
-    bool hasalnum(const String& s);
+            *result = temp;
+            (void)++result;
 
-    /**
-     * @brief
-     *
-     * @param s
-     * @return String
-     */
-    String porterstem(const String& s);
+            start_index = found + delim.size();
+            found = s.find(delim, start_index);
+        }
+
+        *result = std::string(s.begin() + start_index, s.end());
+        return result;
+    }
+
+    inline bool
+    is_trimmable(char c)
+    {
+        return !isalnum(c);
+    }
+
+    std::string
+    trim(const std::string& s);
+
+    std::string
+    casefold(const std::string& s);
+
+    bool
+    hasalnum(const std::string& s);
+
+    std::string
+    porterstem(const std::string& s);
 }
 
 #endif

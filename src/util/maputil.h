@@ -1,75 +1,80 @@
 #ifndef UTIL_MAPUTIL_H_INCLUDED
 #define UTIL_MAPUTIL_H_INCLUDED
-#include "util/util_common.h"
 #include <map>
 #include <set>
 
 namespace util
 {
-    template<typename K, typename V>
-    using Map = std::map<K,V>;
-    template<typename T>
-    using Set = std::set<T>;
-    template<typename T1, typename T2>
-    using Pair = std::pair<T1,T2>;
-
-    template<typename K, typename V>
-    Set<K> keys(const Map<K,V>& map)
+    template<typename K, typename V, typename OutputIt>
+    OutputIt
+    keys(const std::map<K,V>& map, OutputIt result)
     {
-        Set<K> keys;
         for (const auto& [key, val] : map) {
-            keys.insert(key);
+            *result = key;
+            (void)++result;
         }
-        return keys;
+        return result;
     }
 
-    template<typename K, typename V>
-    Set<V> values(const Map<K,V>& map)
+    template<typename K, typename V, typename OutputIt>
+    OutputIt
+    values(const std::map<K,V>& map, OutputIt result)
     {
-        Set<V> values;
         for (const auto& [key, val] : map) {
-            values.insert(val);
+            *result = val;
+            (void)++result;
         }
-        return values;
+        return result;
     }
 
-    template<typename K, typename V>
-    Vector<Pair<K,V>> items(const Map<K,V>& map)
+    template<typename K, typename V, typename OutputIt, typename PairMaker>
+    OutputIt
+    items(const std::map<K,V>& map, OutputIt result, PairMaker maker)
     {
-        Vector<Pair<K,V>> items;
         for (const auto& [key, val] : map) {
-            items.push_back(std::make_pair(key, val));
+            *result = maker(key, val);
+            (void)++result;
         }
-        return items;
+        return result;
     }
 
-    template<typename K, typename V>
-    Set<K> common_keys(const Map<K,V>& first, const Map<K,V>& second)
+    template<typename K, typename V, typename OutputIt>
+    OutputIt
+    common_keys(const std::map<K,V>& first, const std::map<K,V>& second,
+                OutputIt result)
     {
-        Set<K> common;
         if (first.size() > second.size()) {
             for (const auto& [key, val] : second) {
                 if (first.find(key) != first.end()) {
-                    common.insert(key);
+                    *result = key;
+                    (void)++result;
                 }
             }
         } else {
             for (const auto& [key, val] : first) {
                 if (second.find(key) != second.end()) {
-                    common.insert(key);
+                    *result = key;
+                    (void)++result;
                 }
             }
         }
-        return common;
+        return result;
     }
 
-    template<typename K, typename V>
-    Set<K> all_keys(const Map<K,V>& first, const Map<K,V>& second)
+    template<typename K, typename V, typename OutputIt>
+    OutputIt
+    all_keys(const std::map<K,V>& first, const std::map<K,V>& second,
+             OutputIt result)
     {
-        Set<K> all;
-        for (const auto& [key, val] : first) { all.insert(key); }
+        std::set<K> all;
+        for (const auto& [key, val] : first)  { all.insert(key); }
         for (const auto& [key, val] : second) { all.insert(key); }
-        return all;
+
+        for (const auto& key : all) {
+            *result = key;
+            (void)++result;
+        }
+        return result;
     }
 }
 

@@ -1,37 +1,48 @@
 #ifndef UTIL_FUNCUTIL_H_INCLUDED
 #define UTIL_FUNCUTIL_H_INCLUDED
-#include "util/util_common.h"
+#include <algorithm>
 
 namespace util
 {
-    template<typename T, typename UnaryOperator>
-    auto map(Vector<T> vec, UnaryOperator uop)
-            -> Vector<decltype(uop(std::declval<T>()))>
+    template<typename T,
+             template <typename, typename...> typename Container,
+             typename UnaryOperator,
+             typename... Args>
+    auto
+    fmap(Container<T, Args...> con, UnaryOperator op)
+            -> Container<decltype(op(std::declval<T>()))> // Container<op(T)>
     {
-        using ReturnType = decltype(uop(std::declval<T>()));
+        using ReturnType = decltype(op(std::declval<T>()));
 
-        if (vec.empty()) {
-            return Vector<ReturnType>();
+        Container<ReturnType> ret;
+
+        if (con.empty()) {
+            return ret;
         }
 
-        Vector<ReturnType> ret;
-        for (const T& element : vec) {
-            ReturnType mapped = uop(element);
-            ret.push_back(mapped);
-        }
+        auto ins = std::inserter(ret, ret.begin());
+        std::transform(con.begin(), con.end(), ins, [&op](T t) { return op(t); });
+
         return ret;
     }
 
-    template<typename T, typename BinaryOperator>
-    T reduce(Vector<T> vec, T identity, BinaryOperator bop)
+    template<typename T,
+             template <typename, typename...> typename Container,
+             typename BinaryOperator,
+             typename... Args>
+    auto
+    reduce(Container<T, Args...> con, T init, BinaryOperator bop)
+            -> T
     {
-        if (vec.empty()) {
-            return identity;
+        if (con.empty()) {
+            return init;
         }
-        T ret = identity;
-        for (size_t i = 1; i < vec.size(); i++) {
-            ret = bop(vec[i], ret);
+
+        T ret = init;
+        for (const auto& element : con) {
+            ret = bop(ret, element);
         }
+
         return ret;
     }
 }

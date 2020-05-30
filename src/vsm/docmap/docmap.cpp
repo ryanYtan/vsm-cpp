@@ -21,12 +21,11 @@ namespace vsm
 
     double DocumentMap::vector_length(DocId docid) const
     {
-        auto values = util::values(*_dmap.at(docid));
-        auto as_vector = std::vector<Count>(values.begin(), values.end());
-        auto squared = util::map(as_vector, [](int i) { return (double)i * i; });
-        double sum = util::reduce(squared, 0.0, [](double x, double y) {
-            return x + y;
-        });
+        std::vector<Count> values;
+        util::values(*_dmap.at(docid), std::back_inserter(values));
+        auto squared = util::fmap(values, [](Count i) { return (double)i * i; });
+        double sum = util::reduce(squared, 0.0,
+                                  [](double x, double y) { return x + y; });
         return sqrt(sum);
     }
 

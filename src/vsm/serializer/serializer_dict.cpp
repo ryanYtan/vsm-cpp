@@ -28,9 +28,10 @@ namespace vsm
         Dictionary::Dict to_build;
         for (std::string s; std::getline(input, s);) {
             s = util::trim(s);
-            auto term_offset = util::split(s, DELIM);
-            auto term = term_offset[0];
-            auto offset = static_cast<Offset>(std::stoi(term_offset[1]));
+            std::vector<std::string> termoffset_pairs;
+            util::split(std::back_inserter(termoffset_pairs), s, DELIM);
+            auto term = termoffset_pairs[0];
+            auto offset = static_cast<Offset>(std::stoi(termoffset_pairs[1]));
             to_build[term] = offset;
         }
         return Dictionary(to_build);

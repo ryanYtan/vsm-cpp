@@ -45,15 +45,21 @@ namespace vsm
         std::string serialized;
         std::getline(input, serialized);
         serialized = util::trim(serialized);
-        auto plists = util::split(serialized, DELIM_L1);
+
+        std::vector<std::string> plists;
+        util::split(std::back_inserter(plists), serialized, DELIM_L1);
 
         for (const std::string& plist : plists) {
-            auto components = util::split(plist, DELIM_L2);
+            std::vector<std::string> components;
+            util::split(std::back_inserter(components), plist, DELIM_L2);
 
             auto docid = components[0];
             auto termfreq = static_cast<TermFreq>(std::stoi(components[1]));
-            auto positions = util::split(components[2], DELIM_L3);
-            auto poslist = util::map(positions, [](std::string s) {
+
+            std::vector<std::string> positions;
+            util::split(std::back_inserter(positions), components[2], DELIM_L3);
+
+            auto poslist = util::fmap(positions, [](std::string s) {
                 return static_cast<Position>(std::stoi(s));
             });
 

@@ -50,7 +50,8 @@ namespace vsm
             } else if (s == DELIM_CLOSER) {
                 inside = false;
             } else if (inside) {
-                auto termcount_pairs = util::split(s, DELIM);
+                std::vector<std::string> termcount_pairs;
+                util::split(std::back_inserter(termcount_pairs), s, DELIM);
                 auto term = termcount_pairs[0];
                 auto count = static_cast<Count>(std::stoi(termcount_pairs[1]));
                 (*dmap[docid])[term] = count;

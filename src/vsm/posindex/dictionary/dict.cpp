@@ -31,6 +31,11 @@ namespace vsm
 
     Dictionary::VectorPairs Dictionary::items() const
     {
-        return util::items(_dict);
+        VectorPairs itemlist;
+        auto maker = [](Term t, Offset o) {
+            return std::make_pair(t, o);
+        };
+        util::items(_dict, std::back_inserter(itemlist), maker);
+        return itemlist;
     }
 }

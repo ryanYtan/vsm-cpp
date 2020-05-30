@@ -1,5 +1,6 @@
 .vscode
 reuters_data/*
+data/*
 dictionary.txt
 documents.txt
 postings.txt

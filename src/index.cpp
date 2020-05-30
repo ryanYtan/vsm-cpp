@@ -87,7 +87,8 @@ std::vector<std::string> getfilepaths(const std::string& pattern)
 
 std::vector<std::string> tokenize(const std::string& text)
 {
-    auto tokens = util::split(text, " ");
+    std::vector<std::string> tokens;
+    util::split(std::back_inserter(tokens), text, " ");
 
     std::vector<std::string> result;
 

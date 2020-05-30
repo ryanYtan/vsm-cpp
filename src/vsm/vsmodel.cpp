@@ -50,7 +50,8 @@ namespace vsm
     }
 
     std::vector<DocId> VectorSpaceModel::cosine_similarity(std::string query) {
-        auto tokenized_query = util::split(query, " ");
+        std::vector<std::string> tokenized_query;
+        util::split(std::back_inserter(tokenized_query), query, " ");
 
         auto qvector = VectorMap<Term>::vectorise(
             tokenized_query.begin(), tokenized_query.end(),
