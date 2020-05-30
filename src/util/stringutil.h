@@ -8,15 +8,15 @@ namespace util
              template<typename, typename...> typename Container,
              typename... Args>
     std::string
-    join(const Container<T>& strings, const std::string& delim = " ")
+    join(const Container<T>& con, const std::string& delim = " ")
     {
-        if (strings.empty()) {
+        if (con.empty()) {
             return "";
         }
         std::stringstream ss;
         size_t i = 1;
-        for (const auto& s : strings) {
-            if (i == strings.size()) {
+        for (const auto& s : con) {
+            if (i == con.size()) {
                 ss << s;
             } else {
                 ss << s << delim;
@@ -32,6 +32,7 @@ namespace util
     split(OutputIt result, const std::string& s, const std::string& delim = " ")
     {
         if (s.empty()) {
+            *result = "";
             return result;
         }
 
