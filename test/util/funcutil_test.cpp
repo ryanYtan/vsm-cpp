@@ -69,6 +69,7 @@ TEST_CASE("reduce")
         SECTION("Zero init value") {
             int expected = 15;
             int actual = util::reduce(int_test_vector, 0, [](int x, int y) {
+                return x + y;
             });
             REQUIRE(expected == actual);
         }
