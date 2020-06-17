@@ -46,12 +46,31 @@ namespace vsm
         VectorMap<K> mul(double scalar) const;
         VectorMap<K> div(double scalar) const;
 
-        template<class U>
-        friend std::ostream& operator<<(std::ostream& o, const VectorMap<U>& vm);
+        template<class U> friend VectorMap<U>& operator+=(const VectorMap<U>& rhs) const;
+        template<class U> friend VectorMap<U>& operator+=(double rhs) const;
+        template<class U> friend VectorMap<U>  operator+ (VectorMap<U> lhs, const VectorMap& rhs);
+        template<class U> friend VectorMap<U>  operator+ (VectorMap<U> lhs, double rhs);
+        template<class U> friend VectorMap<U>  operator+ (double lhs, VectorMap<U> rhs);
+
+        template<class U> friend VectorMap<U>& operator-=(const VectorMap<U>& rhs) const;
+        template<class U> friend VectorMap<U>& operator-=(double rhs) const;
+        template<class U> friend VectorMap<U>  operator- (VectorMap<U> lhs, const VectorMap& rhs);
+        template<class U> friend VectorMap<U>  operator- (VectorMap<U> lhs, double rhs);
+        template<class U> friend VectorMap<U>  operator- (double lhs, VectorMap<U> rhs);
+
+        template<class U> friend VectorMap<U>& operator*=(double rhs) const;
+        template<class U> friend VectorMap<U>  operator* (VectorMap<U> lhs, double rhs);
+        template<class U> friend VectorMap<U>  operator* (double lhs, VectorMap<U> rhs);
+
+        template<class U> friend std::ostream& operator<<(std::ostream& o, const VectorMap<U>& vm);
     };
 
+    template<class U>
+    VectorMap<U>& VectorMap<U>::operator+=();
+
     template<class K>
-    VectorMap<K>::VectorMap(std::map<K, double> vecmap) : _vecmap(vecmap)
+    VectorMap<K>::VectorMap(std::map<K, double> vecmap)
+        : _vecmap(vecmap)
     {}
 
     template<class K>

@@ -8,14 +8,15 @@ template<typename T>    using Vector    = std::vector<T>;
 template<typename T>    using Set       = std::set<T>;
 template<typename T>    using List      = std::list<T>;
 
+auto numbers = {1, 2, 3, 4, 5};
+
+Vector<int> int_test_vector(numbers);
+List<int> int_test_list(numbers);
+Set<int> int_test_set(numbers);
+
 TEST_CASE("fmap")
 {
     SECTION("Non-empty vector") {
-        auto numbers = {1, 2, 3, 4, 5};
-
-        Vector<int> int_test_vector(numbers);
-        List<int> int_test_list(numbers);
-        Set<int> int_test_set(numbers);
 
         SECTION("Change of type, different containers") {
             Vector<double> expected1({1.0, 2.0, 3.0, 4.0, 5.0});
@@ -59,5 +60,34 @@ TEST_CASE("fmap")
             return i;
         });
         REQUIRE(actual.size() == 0);
+    }
+}
+
+TEST_CASE("reduce")
+{
+    SECTION("Non-empty vector") {
+        SECTION("Zero init value") {
+            int expected = 15;
+            int actual = util::reduce(int_test_vector, 0, [](int x, int y) {
+            });
+            REQUIRE(expected == actual);
+        }
+
+        SECTION("Non-zero init value") {
+            int expected = 20;
+            int actual = util::reduce(int_test_vector, 5, [](int x, int y) {
+                return x + y;
+            });
+            REQUIRE(expected == actual);
+        }
+
+        SECTION("Empty map returns init") {
+            int expected = 1;
+            auto empty = std::vector<int>();
+            int actual = util::reduce(empty, 1, [](int x, int y) {
+                return x + y;
+            });
+            REQUIRE(actual == expected);
+        }
     }
 }

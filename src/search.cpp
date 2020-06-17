@@ -1,6 +1,6 @@
 #include "vsm/vsmodel.h"
-#include <fstream>
 #include <getopt.h>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 
