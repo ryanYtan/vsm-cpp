@@ -1,5 +1,5 @@
-# vsm-cpp-basic
+# vsm-cpp
 
-Simple VectorSpaceModel built primarily to learn C++.
+CLI Implementation of a Vector Space Model.
 
-Adapted from a project done in school, viewable at [this site](https://www.comp.nus.edu.sg/~cs3245/hw3-vsm.html).
+An example is described [here](https://www.researchgate.net/publication/45087099_Vector_space_model_for_document_representation_in_information_retrieval)
